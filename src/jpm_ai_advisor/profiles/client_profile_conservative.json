@@ -1,0 +1,28 @@
+{
+  "name": "Diane Whitfield",
+  "age": 58,
+  "occupation": "High school principal",
+  "risk_aversion": 2,
+  "annual_income": 98000,
+  "liquid_assets": 45000,
+  "retirement_accounts": {
+    "401k": 310000,
+    "roth_ira": 62000
+  },
+  "existing_investments": [
+    "S&P 500 index fund (in 401k)",
+    "Employer stock (12% of retirement accounts)"
+  ],
+  "debts": {
+    "mortgage_balance": 140000
+  },
+  "goals": [
+    "Retire at 65 with enough to maintain current lifestyle",
+    "Pay off mortgage before retiring"
+  ],
+  "time_horizon_years": 7,
+  "constraints": [
+    "Uncomfortable with more than a 15% portfolio drawdown",
+    "Wants to reduce reliance on employer stock"
+  ]
+}

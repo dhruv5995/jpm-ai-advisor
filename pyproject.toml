@@ -1,0 +1,35 @@
+[project]
+name = "jpm-ai-advisor"
+version = "0.1.0"
+description = "Multi-agent (client/advisor/analyst) simulated investment advisory conversation"
+readme = "README.md"
+authors = [
+    { name = "Dhruv Shah", email = "dhruv5995@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=1.3.0",
+    "openai>=3.7.0",
+    "pydantic>=2.13.5",
+    "python-dotenv>=1.2.3",
+    "rank-bm25>=0.2.2",
+]
+
+[project.scripts]
+jpm-ai-advisor = "jpm_ai_advisor.main:main"
+
+[build-system]
+requires = ["uv_build>=0.11.29,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.5",
+]
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

@@ -1,0 +1,28 @@
+{
+  "name": "Marcus Ionescu",
+  "age": 29,
+  "occupation": "Software engineer",
+  "risk_aversion": 4,
+  "annual_income": 145000,
+  "liquid_assets": 30000,
+  "retirement_accounts": {
+    "401k": 42000,
+    "roth_ira": 18000
+  },
+  "existing_investments": [
+    "Individual tech stocks (65% of taxable brokerage)",
+    "Bitcoin (10000 USD)"
+  ],
+  "debts": {
+    "student_loans": 22000
+  },
+  "goals": [
+    "Save for a home down payment in 4 years (~120000 target)",
+    "Build long-term retirement wealth"
+  ],
+  "time_horizon_years": 4,
+  "constraints": [
+    "Wants to keep some individual stock picking",
+    "Open to higher volatility for retirement money, less so for the house down payment fund"
+  ]
+}
