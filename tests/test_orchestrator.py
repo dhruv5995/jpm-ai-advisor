@@ -72,3 +72,29 @@ def test_run_session_gives_up_after_max_client_turns() -> None:
 
     assert result.resolved is False
     assert "Max client turns" in result.summary
+
+
+def test_end_conversation_is_always_unresolved_even_if_advisor_calls_it_after_reporting() -> None:
+    """`end_conversation` must never be able to mark a session resolved.
+
+    A live run against GPT-5.1 called this right after getting analyst
+    findings back, without ever sending the client anything via
+    `ask_client` — effectively declaring victory unilaterally. Resolution
+    can only come from the client's own `satisfied=True`
+    (see the other test in this file); this covers the give-up path.
+    """
+    llm = FakeLLMClient(
+        [
+            _tool_response("reply", message="What should my portfolio look like?", satisfied=False),
+            _tool_response(
+                "delegate_to_analyst", task="Recommend a model portfolio", context="40yo, moderate risk"
+            ),
+            _tool_response("report_to_advisor", findings="Some findings.", sources=[]),
+            _tool_response("end_conversation", summary="Addressed the client's need."),
+        ]
+    )
+
+    result = run_session(llm=llm, profile=PROFILE, max_client_turns=8)
+
+    assert result.resolved is False
+    assert result.summary == "Addressed the client's need."

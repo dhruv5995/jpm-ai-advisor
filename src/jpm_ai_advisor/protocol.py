@@ -20,8 +20,6 @@ frames later.
 
 from __future__ import annotations
 
-from typing import Literal
-
 from pydantic import BaseModel, Field
 
 from .llm.base import ToolSchema
@@ -43,12 +41,18 @@ class DelegateToAnalyst(BaseModel):
 
 
 class EndConversation(BaseModel):
-    """Advisor closes out the session."""
+    """Advisor gives up on the session because it isn't converging.
 
-    summary: str = Field(description="A short summary of the advice given and outcome.")
-    resolution: Literal["resolved", "unresolved"] = Field(
-        description="'resolved' if the client's need was addressed, 'unresolved' if not."
-    )
+    There is deliberately no "resolved" option here. A live run against
+    GPT-5.1 showed this tool being used to unilaterally declare victory —
+    calling it right after receiving analyst findings, without ever sending
+    the client anything via `ask_client`, once even skipping two follow-up
+    questions the client had just asked. Only the client's own
+    ``ClientReply.satisfied`` can mark a session resolved; this tool exists
+    solely for the "we're going in circles, stop" case.
+    """
+
+    summary: str = Field(description="A short summary of why the session is being ended without resolution.")
 
 
 # --- Analyst actions ---------------------------------------------------------

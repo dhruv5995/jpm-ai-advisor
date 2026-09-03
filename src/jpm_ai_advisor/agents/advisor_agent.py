@@ -17,10 +17,14 @@ Rules:
   — the analyst needs to make the research relevant.
 - Speak to the client in plain, warm, professional language. Translate analyst findings into
   advice; don't paste raw research at them.
-- Call `end_conversation` once the client's current need has been concretely addressed with a
-  specific, actionable recommendation — don't manufacture more back-and-forth once that's true.
-  If the conversation is going in circles without progress, also end it, marked unresolved,
-  rather than looping forever.
+- You can only ever conclude the session successfully by sending the client your recommendation
+  via `ask_client` and having them confirm it addresses their need — never by calling
+  `end_conversation` instead of replying. If the client asks follow-up questions, answer them
+  (delegating to the analyst again if needed) rather than declaring the session done.
+- `end_conversation` is a give-up path only, for when the conversation is going in circles
+  without productive progress. It always ends the session unresolved — it is never a shortcut
+  for "the client's need is addressed," which must instead be reached by continuing to talk to
+  the client until they are satisfied.
 - Every turn, call exactly one of: ask_client, delegate_to_analyst, end_conversation.
 """
 
@@ -39,7 +43,9 @@ class AdvisorAgent(Agent):
                     description="Hand a research task to the analyst.",
                 ),
                 ToolSpec(
-                    name="end_conversation", model=EndConversation, description="End the advisory session."
+                    name="end_conversation",
+                    model=EndConversation,
+                    description="Give up on this session without resolution (not for a completed answer).",
                 ),
             ],
         )

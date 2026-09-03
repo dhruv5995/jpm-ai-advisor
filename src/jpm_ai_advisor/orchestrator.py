@@ -4,10 +4,13 @@ This is the piece a multi-agent framework would normally give you as a graph
 executor or a group-chat manager. Written out here, it's ~50 lines: seed the
 client's opening message, let the advisor decide (possibly bouncing off the
 analyst any number of times) whether to research more or respond, get the
-client's reaction, repeat until the client is satisfied or the advisor
-explicitly ends the session. Two safety valves bound it: a max number of
-analyst delegations per advisor turn, and a max number of client turns per
-session — without them, a model that never converges would loop forever.
+client's reaction, repeat until the client is satisfied or the advisor gives
+up. Resolution can only come from the client's own `satisfied=True` — the
+advisor's `end_conversation` is a give-up path only (see protocol.py), never
+a way to declare victory unilaterally. Two more safety valves bound it: a
+max number of analyst delegations per advisor turn, and a max number of
+client turns per session — without them, a model that never converges would
+loop forever.
 """
 
 from __future__ import annotations
@@ -93,8 +96,12 @@ def run_session(*, llm: LLMClient, profile: dict, max_client_turns: int = 8) -> 
                 break
 
             if isinstance(action, EndConversation):
+                # Always unresolved: end_conversation is a give-up path, not
+                # an advisor-declared victory. See protocol.py's docstring —
+                # a real run against GPT-5.1 used this to end sessions the
+                # client never actually heard the answer to.
                 log("advisor", "system", f"[end_conversation] {action.summary}")
-                return SessionResult(action.resolution == "resolved", action.summary, transcript)
+                return SessionResult(False, action.summary, transcript)
         else:
             return SessionResult(False, "Advisor exceeded delegation budget without a response.", transcript)
 
